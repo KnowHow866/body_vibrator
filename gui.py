@@ -33,7 +33,7 @@ if __name__ == '__main__':
     while True:
         for i in range(4):
             tmp = ['0', '0', '0', '0']
-            tmp[i] = '1';
+            tmp[i] = '1'
             str_to_send = "".join(tmp)
             print(str_to_send)
             arduino_serial.write(str.encode(str_to_send))
