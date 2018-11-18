@@ -8,7 +8,7 @@ import tkinter as tk
 
 device_port = '/dev/cu.usbserial-AI0443U0' # default to holis macBook, please set as your own port
 
-arduino_serial = serial.Serial(device_port, 9600, timeout=.1)
+# arduino_serial = serial.Serial(device_port, 9600, timeout=.1)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=
