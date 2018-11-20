@@ -1,10 +1,6 @@
 import tkinter as tk
 from tkinter import font  as tkfont
 
-# reference
-# 1. multiple frame: https://stackoverflow.com/questions/7546050/switch-between-two-frames-in-tkinter
-# 2. how to locate element:     pack, grid, place
-
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -76,6 +72,8 @@ class DirectionVibration(tk.Frame):
 
 
 app = Application()
+app.title('Body vibrator')
+app.geometry("300x400")
 
 if __name__ == '__main__':
     app.mainloop()
