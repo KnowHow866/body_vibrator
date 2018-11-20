@@ -1,5 +1,5 @@
 import serial
-from tkinter import *
+# from tkinter import *
 import time
 import argparse
 
@@ -7,10 +7,10 @@ import argparse
 amplitude = 0
 
 # tkinter setting
-tkBoard = Tk()
-tkBoard.minsize(width=320, height=170)
-tkBoard.config(bg='yellow')
-tkBoard.title("GUI for Arduino")
+# tkBoard = Tk()
+# tkBoard.minsize(width=320, height=170)
+# tkBoard.config(bg='yellow')
+# tkBoard.title("GUI for Arduino")
 
 # arduino serial setting
 device_port = '/dev/cu.usbserial-AI0443U0'
