@@ -2,7 +2,6 @@ int Vib[4] = {12, 11, 10, 9};
 int mode = 0; // 0: non-directional, 1: directional
 int amplitude = 1;
 int modeIsSet = 0;
-String vibration;
 
 void setup() {
   // put your setup code here, to run once:
@@ -19,34 +18,43 @@ void loop() {
   while (Serial.available()) {
     if (!modeIsSet) {
       mode = Serial.read() - '0';
-      Serial.print("Set mode");
-      modeIsSet = 1;
+      if (mode == 0 || mode == 1) {
+        //Serial.println("mode is: ");
+        Serial.println(mode);
+        modeIsSet = 1;
+      }
     } 
-    if (mode) { // mode: 1
-      vibration = Serial.readString();
-      Serial.print(vibration);
-      for(int i = 0; i < 4; i ++){
-        if (vibration[i] - '0') {
-          digitalWrite(Vib[i], HIGH);  
-        }  
-        else {
-          digitalWrite(Vib[i], LOW);  
+    else {
+      if (mode) { // mode: 1
+        String tmp = Serial.readString();
+        //int tmp = Serial.read();
+        Serial.print("enter mode 1");
+        int tmpLen = sizeof(tmp);
+        char vibration[tmpLen];
+        tmp.toCharArray(vibration, tmpLen);
+        for(int i = 0; i < 4; i ++){
+          if (vibration[i] - '0') {
+            digitalWrite(Vib[i], HIGH);  
+          }  
+          else {
+            digitalWrite(Vib[i], LOW);  
+          }
         }
+        delay(500);
       }
-      delay(500);
-    }
-    else { // mode: 0
-      amplitude = Serial.read() - '0';
-      Serial.print("I received amplitude: " + amplitude);
-      for (int i  = 0; i < 4; i ++) {
-        if (i < amplitude) {
-          digitalWrite(Vib[i], HIGH);
+      else { // mode: 0
+        amplitude = Serial.read() - '0';
+        Serial.println("I received amplitude: " + amplitude);
+        for (int i  = 0; i < 4; i ++) {
+          if (i < amplitude) {
+            digitalWrite(Vib[i], HIGH);
+          }
+          else {
+            digitalWrite(Vib[i], LOW);  
+          }
         }
-        else {
-          digitalWrite(Vib[i], LOW);  
-        }
+        delay(500);
       }
-      delay(500);
     }
   }
 }
