@@ -1,49 +1,81 @@
 import tkinter as tk
+from tkinter import font  as tkfont
 
 # reference
 # 1. multiple frame: https://stackoverflow.com/questions/7546050/switch-between-two-frames-in-tkinter
 # 2. how to locate element:     pack, grid, place
 
-root = tk.Tk()
-root.title('Body vibrator')
-root.geometry("300x200")
-root.resizable(0, 0)
-# root.pack_propagate(0)
-# root.pack(fill=tk.BOTH, expand=1)
+class Application(tk.Tk):
+    def __init__(self, *args, **kwargs):
+        tk.Tk.__init__(self, *args, **kwargs)
 
-class Application(tk.Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
-        self.master = master
-        self.pack_propagate(0)
-        self.pack(fill=tk.BOTH, expand=1)
+        self.title_font = tkfont.Font(family='Helvetica', size=18, weight="bold", slant="italic")
 
-        self.entry_point()
+        # the container is where we'll stack a bunch of frames
+        # on top of each other, then the one we want visible
+        # will be raised above the others
+        container = tk.Frame(self)
+        container.pack(side="top", fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
-    def entry_point(self):
-        '''
-        Start interface of program, let user choose basic mode
-        basic mode like: direction, undirection
-        '''
-        self.direction_mode = tk.Button(
-            self, text='Direction Mode(方向震動模式)',
-            command=None
-            )
-        self.undirection_mode = tk.Button(
-            self, text='Undirection Mode(無方向震動模式)',
-            command=None
-            )
+        self.frames = dict()
+        for F in (StartPage, DirectionVibration,):
+            page_name = F.__name__
+            frame = F(parent=container, controller=self)
+            self.frames[page_name] = frame
 
-        self.direction_mode.grid(row=0, sticky=tk.E+tk.W)
-        self.undirection_mode.grid(row=1, sticky=tk.E+tk.W)
+            # put all of the pages in the same location;
+            # the one on the top of the stacking order
+            # will be the one that is visible.
+            frame.grid(row=0, column=0, sticky="nsew")
 
-        # self.direction_mode.pack(side="top")
-        # self.undirection_mode.pack(side="top")
+        self.show_frame("StartPage")
 
-    def say_hi(self):
-        print("hi there, everyone!")
+    def show_frame(self, page_name):
+        '''Show a frame for the given page name'''
+        frame = self.frames[page_name]
+        frame.tkraise()
 
-app = Application(master=root)
+class StartPage(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+
+        label = tk.Label(self, text="Body vibrator", font=controller.title_font)
+        label.pack(side="top", fill="x", pady=10)
+
+        button1 = tk.Button(self, text="Direction Mode(方向震動模式)",
+                            command=lambda: controller.show_frame('DirectionVibration'))
+        button2 = tk.Button(self, text="Undirection Mode(無方向震動模式)",
+                            command=lambda: None)
+        button1.pack()
+        button2.pack()
+
+class DirectionVibration(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        var = tk.StringVar()
+        vibration_set = []
+
+        vibration_set.append(
+            tk.Radiobutton(self, text='由 1~6 來回震動一次',
+                    variable=var, value='1',
+                    command=None)
+        )
+        vibration_set.append(
+            tk.Radiobutton(self, text='由 6~1 來回震動一次',
+                    variable=var, value='2',
+                    command=None)
+        )
+
+        for radio_button in vibration_set:
+            radio_button.pack()
+
+
+app = Application()
 
 if __name__ == '__main__':
     app.mainloop()
